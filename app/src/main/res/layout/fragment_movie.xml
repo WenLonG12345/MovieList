@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/rl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_500"
+        android:gravity="center"
+        android:padding="5dp"
+        android:elevation="4dp"
+        android:layout_alignParentTop="true">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/movie_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/iv_profile"
+            app:defaultQueryHint="Search..."
+            app:searchIcon="@drawable/ic_baseline_search_24"
+            app:searchHintIcon="@drawable/ic_baseline_search_24"
+            app:queryHint="Search..."
+            style="@style/CustomSearchView"/>
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_baseline_person_24"
+            app:tint="@color/white" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_movies"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/movie_item"
+        android:layout_below="@id/rl_toolbar"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <TextView
+        android:id="@+id/tv_empty_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Result found for this query"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>
