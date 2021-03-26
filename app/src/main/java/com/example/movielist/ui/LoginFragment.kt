@@ -1,10 +1,11 @@
-package com.example.movielist
+package com.example.movielist.ui
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.movielist.R
 import com.example.movielist.databinding.FragmentLoginBinding
 import com.example.movielist.utils.isEmailValid
 import com.example.movielist.utils.isPasswordValid

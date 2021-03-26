@@ -1,10 +1,11 @@
-package com.example.movielist
+package com.example.movielist.ui
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.movielist.R
 import com.example.movielist.databinding.FragmentProfileBinding
 import com.example.movielist.utils.showToast
 import com.example.movielist.viewmodel.MovieViewModel

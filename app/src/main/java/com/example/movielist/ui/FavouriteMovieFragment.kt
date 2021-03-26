@@ -1,4 +1,4 @@
-package com.example.movielist
+package com.example.movielist.ui
 
 import android.os.Bundle
 import android.view.View
@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.movielist.ui.adapter.FavouriteMovieAdapter
+import com.example.movielist.FavouriteMovieFragmentDirections
+import com.example.movielist.R
 import com.example.movielist.databinding.FragmentFavouriteMovieBinding
 import com.example.movielist.model.Movie
 import com.example.movielist.utils.hide
@@ -57,7 +60,11 @@ class FavouriteMovieFragment: Fragment(R.layout.fragment_favourite_movie) {
     }
 
     private fun navigateToDetailsFragment(movie: Movie) {
-        val action = FavouriteMovieFragmentDirections.actionFavouriteMovieFragmentToDetailsMovieFragment(movie, true)
+        val action =
+            FavouriteMovieFragmentDirections.actionFavouriteMovieFragmentToDetailsMovieFragment(
+                movie,
+                true
+            )
         findNavController().navigate(action)
     }
 

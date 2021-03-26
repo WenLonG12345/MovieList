@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/movieFragment"
-        android:name="com.example.movielist.MovieFragment"
+        android:name="com.example.movielist.ui.MovieFragment"
         android:label="MovieFragment"
         tools:layout="@layout/fragment_movie" >
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/favouriteMovieFragment"
-        android:name="com.example.movielist.FavouriteMovieFragment"
+        android:name="com.example.movielist.ui.FavouriteMovieFragment"
         android:label="FavouriteMovieFragment"
         tools:layout="@layout/fragment_favourite_movie">
         <action
@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.movielist.ProfileFragment"
+        android:name="com.example.movielist.ui.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_profile">
         <action
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.movielist.LoginFragment"
+        android:name="com.example.movielist.ui.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
-        android:name="com.example.movielist.SignupFragment"
+        android:name="com.example.movielist.ui.SignupFragment"
         android:label="SignupFragment"
         tools:layout="@layout/fragment_sign_up">
         <action
@@ -60,7 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailsMovieFragment"
-        android:name="com.example.movielist.DetailsMovieFragment"
+        android:name="com.example.movielist.ui.DetailsMovieFragment"
         android:label="DetailsMovieFragment"
         tools:layout="@layout/fragment_details_movie">
         <argument

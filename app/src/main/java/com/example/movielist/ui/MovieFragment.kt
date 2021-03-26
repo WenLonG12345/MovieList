@@ -1,4 +1,4 @@
-package com.example.movielist
+package com.example.movielist.ui
 
 import android.os.Bundle
 import android.view.View
@@ -8,10 +8,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.movielist.ui.adapter.MovieAdapter
+import com.example.movielist.MovieFragmentDirections
+import com.example.movielist.R
 import com.example.movielist.databinding.FragmentMovieBinding
 import com.example.movielist.model.Movie
-import com.example.movielist.utils.hide
-import com.example.movielist.utils.show
 import com.example.movielist.utils.showToast
 import com.example.movielist.viewmodel.MovieViewModel
 import dagger.hilt.android.AndroidEntryPoint
