@@ -6,11 +6,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.movielist.ui.adapter.FavouriteMovieAdapter
-import com.example.movielist.FavouriteMovieFragmentDirections
 import com.example.movielist.R
 import com.example.movielist.databinding.FragmentFavouriteMovieBinding
 import com.example.movielist.model.Movie
+import com.example.movielist.ui.adapter.FavouriteMovieAdapter
 import com.example.movielist.utils.hide
 import com.example.movielist.utils.show
 import com.example.movielist.utils.showToast

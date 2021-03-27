@@ -7,7 +7,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
-import com.example.movielist.DetailsMovieFragmentArgs
 import com.example.movielist.R
 import com.example.movielist.databinding.FragmentDetailsMovieBinding
 import com.example.movielist.model.Movie

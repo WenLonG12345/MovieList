@@ -8,11 +8,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.movielist.ui.adapter.MovieAdapter
-import com.example.movielist.MovieFragmentDirections
 import com.example.movielist.R
 import com.example.movielist.databinding.FragmentMovieBinding
 import com.example.movielist.model.Movie
+import com.example.movielist.ui.adapter.MovieAdapter
+import com.example.movielist.utils.hide
+import com.example.movielist.utils.show
 import com.example.movielist.utils.showToast
 import com.example.movielist.viewmodel.MovieViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,7 +75,15 @@ class MovieFragment: Fragment(R.layout.fragment_movie) {
             } else {
                 findNavController().navigate(R.id.profileFragment)
             }
+        }
 
+        binding.ivFavouriteMovie.setOnClickListener {
+            if(movieViewModel.auth.currentUser == null) {
+                findNavController().navigate(R.id.loginFragment)
+                "Please login first".showToast(requireContext())
+            } else {
+                findNavController().navigate(R.id.favouriteMovieFragment)
+            }
         }
 
         binding.movieSearchView.apply {
