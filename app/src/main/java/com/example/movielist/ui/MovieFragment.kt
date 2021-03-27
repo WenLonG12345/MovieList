@@ -1,7 +1,9 @@
 package com.example.movielist.ui
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -98,6 +100,12 @@ class MovieFragment: Fragment(R.layout.fragment_movie) {
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
+                    newText?.let {
+                        if(newText.isEmpty()) {
+                            movieViewModel.setSearchQuery("")
+                        }
+                    }
+
                     return true
                 }
             })
@@ -107,6 +115,11 @@ class MovieFragment: Fragment(R.layout.fragment_movie) {
             movieViewModel.setSearchQuery("")
             false
         }
+
+        // set searchview text & hint text to white
+        val searchEt = binding.movieSearchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+        searchEt.setTextColor(Color.WHITE)
+        searchEt.setHintTextColor(Color.WHITE)
     }
 
 

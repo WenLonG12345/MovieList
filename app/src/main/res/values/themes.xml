@@ -14,12 +14,4 @@
         <item name="android:textColor">@color/black</item>
         <!-- Customize your theme here. -->
     </style>
-
-    <style name="CustomSearchView" parent="Widget.AppCompat.SearchView">
-        <item name="searchHintIcon">@android:drawable/ic_menu_search</item>
-        <item name="android:textColorHint">@color/white</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:editTextColor">@color/white</item>
-        <item name="queryHint">Search</item>
-    </style>
 </resources>

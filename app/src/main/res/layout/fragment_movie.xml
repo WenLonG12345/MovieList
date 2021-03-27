@@ -19,12 +19,11 @@
             android:id="@+id/movie_search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:iconifiedByDefault="false"
             android:layout_toStartOf="@id/iv_favourite_movie"
             app:defaultQueryHint="Search..."
             app:searchIcon="@drawable/ic_baseline_search_24"
-            app:searchHintIcon="@drawable/ic_baseline_search_24"
-            app:queryHint="Search..."
-            style="@style/CustomSearchView"/>
+            app:queryHint="Search..." />
 
         <ImageView
             android:id="@+id/iv_profile"
