@@ -49,6 +49,7 @@ class LoginFragment: Fragment(R.layout.fragment_login) {
         movieViewModel.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             try{
                 if(task.isSuccessful) {
+
                     "Successfully Log In".showToast(requireContext())
                     findNavController().navigateUp()
 

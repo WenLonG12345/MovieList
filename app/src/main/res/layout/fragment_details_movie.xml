@@ -52,16 +52,32 @@
                 android:layout_width="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_real_name"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_width="wrap_content"
-                    android:text="REAL NAME"
-                    android:textSize="32sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_real_name"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_width="wrap_content"
+                        android:textSize="32sp" />
+
+                    <ImageView
+                        android:id="@+id/iv_favourite_stars"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_favourite"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="25dp"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
 
                 <RatingBar
                     style="?android:attr/ratingBarStyleSmall"
@@ -82,7 +98,6 @@
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:lineSpacingMultiplier="1.2"
-                    android:text="1966"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                 <TextView
@@ -94,21 +109,37 @@
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:lineSpacingMultiplier="1.2"
-                    android:text="OVERVIEW"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
 
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:background="@color/ocean_blue"
             android:id="@+id/btn_add_to_favourite"
+            android:background="@color/ocean_blue"
             android:layout_gravity="bottom"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="Add To Favourite"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:visibility="gone"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_remove_from_favourite"
+            android:background="@color/ocean_blue"
+            android:layout_gravity="bottom"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Remove From Favourite"
+            android:textColor="@android:color/white"
+            android:visibility="gone"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

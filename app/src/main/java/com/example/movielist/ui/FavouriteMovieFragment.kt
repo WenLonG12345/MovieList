@@ -46,9 +46,11 @@ class FavouriteMovieFragment: Fragment(R.layout.fragment_favourite_movie) {
 
                             if(movieList.isNotEmpty()) {
                                 binding.tvEmptySearch.hide()
+                                binding.rvFavouriteMovies.show()
                                 favouriteMovieAdapter.submitList(movieList)
                             } else {
                                 binding.tvEmptySearch.show()
+                                binding.rvFavouriteMovies.hide()
                             }
                         }
                     } else {

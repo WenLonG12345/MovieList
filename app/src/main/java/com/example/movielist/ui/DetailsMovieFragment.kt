@@ -35,16 +35,9 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
                 findNavController().navigateUp()
             }
         }
-
         val movie = args.movie
-        movie?.let {
-            binding.imageDetail.load(IMAGE_DOMAIN + it.backdrop_path)
-            binding.tvRealName.text = it.original_title
-            binding.tvReleaseDate.text = it.release_date
 
-            binding.tvOverview.text = it.overview
-            binding.rbRating.rating = getRatingStar(it)
-        }
+        checkFavouriteMovie(movie)
 
         binding.btnAddToFavourite.setOnClickListener {
             if(movieViewModel.auth.currentUser == null) {
@@ -55,9 +48,33 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
                 if (movie != null) {
                     // Use logged in user's email as collection's key
                     movieViewModel.db.collection(movieViewModel.auth.currentUser.email)
-                        .add(movie)
+                        .document(movie.id.toString())
+                        .set(movie)
                         .addOnSuccessListener {
                             "Added to Favourite".showToast(requireContext())
+                            setFavouriteMovieUI()
+                        }
+                        .addOnFailureListener {
+                            it.showToast(requireContext())
+                        }
+                }
+            }
+        }
+
+        binding.btnRemoveFromFavourite.setOnClickListener {
+            if(movieViewModel.auth.currentUser == null) {
+                "Please login first".showToast(requireContext())
+                findNavController().navigate(R.id.loginFragment)
+            } else {
+                // REMOVE FAVOURTIE MOVIE FROM FIREBASE
+                if (movie != null) {
+                    // Use logged in user's email as collection's key
+                    movieViewModel.db.collection(movieViewModel.auth.currentUser.email)
+                        .document(movie.id.toString())
+                        .delete()
+                        .addOnSuccessListener {
+                            "Removed from Favourite".showToast(requireContext())
+                            setNormalMovieUI()
                         }
                         .addOnFailureListener {
                             it.showToast(requireContext())
@@ -70,7 +87,48 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
         if(args.isFromFavorite) {
             binding.btnAddToFavourite.hide()
         } else binding.btnAddToFavourite.show()
+    }
 
+    private fun initView(movie: Movie?) {
+        binding.progressBar.hide()
+        movie?.let {
+            binding.imageDetail.load(IMAGE_DOMAIN + it.backdrop_path)
+            binding.tvRealName.text = it.original_title
+            binding.tvReleaseDate.text = it.release_date
+
+            binding.tvOverview.text = it.overview
+            binding.rbRating.rating = getRatingStar(it)
+        }
+    }
+
+    private fun checkFavouriteMovie(movie: Movie?) {
+        val collectRef = movieViewModel.db.collection(movieViewModel.auth.currentUser.email)
+        collectRef.whereEqualTo("id", movie?.id)
+            .get().addOnCompleteListener { task ->
+                if(task.isSuccessful) {
+                    task.result?.let {
+                        initView(movie)
+                        val isRecordEmpty = it.isEmpty
+                        if(isRecordEmpty) {
+                           setNormalMovieUI()
+                        } else {
+                            setFavouriteMovieUI()
+                        }
+                    }
+                }
+            }
+    }
+
+    private fun setFavouriteMovieUI() {
+        binding.btnAddToFavourite.hide()
+        binding.btnRemoveFromFavourite.show()
+        binding.ivFavouriteStars.show()
+    }
+
+    private fun setNormalMovieUI() {
+        binding.btnAddToFavourite.show()
+        binding.btnRemoveFromFavourite.hide()
+        binding.ivFavouriteStars.hide()
     }
 
     private fun getRatingStar(movie: Movie): Float {
