@@ -29,9 +29,5 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
             findNavController().navigateUp()
         }
 
-        binding.rlFavouriteMovie.setOnClickListener {
-            findNavController().navigate(R.id.favouriteMovieFragment)
-        }
-
     }
 }

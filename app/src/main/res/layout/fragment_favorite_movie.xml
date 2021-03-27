@@ -13,7 +13,7 @@
         app:titleTextColor="@color/white"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_favourite_movies"
+        android:id="@+id/rv_favorite_movies"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/favorite_movie_toolbar"

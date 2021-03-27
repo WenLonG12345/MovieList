@@ -7,7 +7,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movielist.R
-import com.example.movielist.databinding.FragmentFavouriteMovieBinding
+import com.example.movielist.databinding.FragmentFavoriteMovieBinding
 import com.example.movielist.model.Movie
 import com.example.movielist.ui.adapter.FavouriteMovieAdapter
 import com.example.movielist.utils.hide
@@ -16,18 +16,18 @@ import com.example.movielist.utils.showToast
 import com.example.movielist.viewmodel.MovieViewModel
 
 
-class FavouriteMovieFragment: Fragment(R.layout.fragment_favourite_movie) {
+class FavoriteMovieFragment: Fragment(R.layout.fragment_favorite_movie) {
 
-    private lateinit var binding: FragmentFavouriteMovieBinding
+    private lateinit var binding: FragmentFavoriteMovieBinding
     private val movieViewModel by activityViewModels<MovieViewModel>()
     private val favouriteMovieAdapter: FavouriteMovieAdapter by lazy {
         FavouriteMovieAdapter { navigateToDetailsFragment(it) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = FragmentFavouriteMovieBinding.bind(view)
+        binding = FragmentFavoriteMovieBinding.bind(view)
 
-        binding.rvFavouriteMovies.run {
+        binding.rvFavoriteMovies.run {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = favouriteMovieAdapter
         }
@@ -46,11 +46,11 @@ class FavouriteMovieFragment: Fragment(R.layout.fragment_favourite_movie) {
 
                             if(movieList.isNotEmpty()) {
                                 binding.tvEmptySearch.hide()
-                                binding.rvFavouriteMovies.show()
+                                binding.rvFavoriteMovies.show()
                                 favouriteMovieAdapter.submitList(movieList)
                             } else {
                                 binding.tvEmptySearch.show()
-                                binding.rvFavouriteMovies.hide()
+                                binding.rvFavoriteMovies.hide()
                             }
                         }
                     } else {
@@ -62,7 +62,7 @@ class FavouriteMovieFragment: Fragment(R.layout.fragment_favourite_movie) {
 
     private fun navigateToDetailsFragment(movie: Movie) {
         val action =
-            FavouriteMovieFragmentDirections.actionFavouriteMovieFragmentToDetailsMovieFragment(
+            FavoriteMovieFragmentDirections.actionFavoriteMovieFragmentToDetailsMovieFragment(
                 movie,
                 true
             )

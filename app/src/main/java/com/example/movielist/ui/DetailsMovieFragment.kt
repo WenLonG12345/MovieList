@@ -102,21 +102,27 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
     }
 
     private fun checkFavouriteMovie(movie: Movie?) {
-        val collectRef = movieViewModel.db.collection(movieViewModel.auth.currentUser.email)
-        collectRef.whereEqualTo("id", movie?.id)
-            .get().addOnCompleteListener { task ->
-                if(task.isSuccessful) {
-                    task.result?.let {
-                        initView(movie)
-                        val isRecordEmpty = it.isEmpty
-                        if(isRecordEmpty) {
-                           setNormalMovieUI()
-                        } else {
-                            setFavouriteMovieUI()
+        if(movieViewModel.auth.currentUser == null) {
+            setNormalMovieUI()
+            initView(movie)
+        } else {
+            val collectRef = movieViewModel.db.collection(movieViewModel.auth.currentUser.email)
+            collectRef.whereEqualTo("id", movie?.id)
+                .get().addOnCompleteListener { task ->
+                    if(task.isSuccessful) {
+                        task.result?.let {
+                            initView(movie)
+                            val isRecordEmpty = it.isEmpty
+                            if(isRecordEmpty) {
+                                setNormalMovieUI()
+                            } else {
+                                setFavouriteMovieUI()
+                            }
                         }
                     }
                 }
-            }
+        }
+
     }
 
     private fun setFavouriteMovieUI() {

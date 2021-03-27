@@ -21,12 +21,12 @@
             app:destination="@id/detailsMovieFragment" />
     </fragment>
     <fragment
-        android:id="@+id/favouriteMovieFragment"
-        android:name="com.example.movielist.ui.FavouriteMovieFragment"
-        android:label="FavouriteMovieFragment"
-        tools:layout="@layout/fragment_favourite_movie">
+        android:id="@+id/favoriteMovieFragment"
+        android:name="com.example.movielist.ui.FavoriteMovieFragment"
+        android:label="FavoriteMovieFragment"
+        tools:layout="@layout/fragment_favorite_movie">
         <action
-            android:id="@+id/action_favouriteMovieFragment_to_detailsMovieFragment"
+            android:id="@+id/action_favoriteMovieFragment_to_detailsMovieFragment"
             app:destination="@id/detailsMovieFragment" />
     </fragment>
     <fragment
@@ -35,8 +35,8 @@
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_profile">
         <action
-            android:id="@+id/action_profileFragment_to_favouriteMovieFragment"
-            app:destination="@id/favouriteMovieFragment" />
+            android:id="@+id/action_profileFragment_to_favoriteMovieFragment"
+            app:destination="@id/favoriteMovieFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"

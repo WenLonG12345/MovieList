@@ -84,7 +84,7 @@ class MovieFragment: Fragment(R.layout.fragment_movie) {
                 findNavController().navigate(R.id.loginFragment)
                 "Please login first".showToast(requireContext())
             } else {
-                findNavController().navigate(R.id.favouriteMovieFragment)
+                findNavController().navigate(R.id.favoriteMovieFragment)
             }
         }
 
