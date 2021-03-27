@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:iconifiedByDefault="false"
-            android:layout_toStartOf="@id/iv_favourite_movie"
+            android:layout_toStartOf="@id/iv_favorite_movie"
             app:defaultQueryHint="Search..."
             app:searchIcon="@drawable/ic_baseline_search_24"
             app:queryHint="Search..." />
@@ -36,10 +36,10 @@
             app:tint="@color/white" />
 
         <ImageView
-            android:id="@+id/iv_favourite_movie"
+            android:id="@+id/iv_favorite_movie"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_favourite_movie"
+            android:src="@drawable/ic_favorite_movie"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/iv_profile"
             android:layout_marginEnd="10dp"/>

@@ -29,7 +29,7 @@
         android:id="@+id/tv_empty_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Favourite Movie at this moment"
+        android:text="No Favorite Movie at this moment"
         android:layout_centerInParent="true"
         android:visibility="gone"/>
 

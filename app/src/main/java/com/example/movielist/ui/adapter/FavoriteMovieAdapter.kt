@@ -9,11 +9,11 @@ import coil.load
 import com.example.movielist.databinding.MovieItemBinding
 import com.example.movielist.model.Movie
 
-class FavouriteMovieAdapter(
+class FavoriteMovieAdapter(
     val onClick: (Movie) -> Unit
-): ListAdapter<Movie, FavouriteMovieAdapter.FavouriteMovieVH>(DiffUtils) {
+): ListAdapter<Movie, FavoriteMovieAdapter.FavoriteMovieVH>(DiffUtils) {
 
-    inner class FavouriteMovieVH(val binding: MovieItemBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class FavoriteMovieVH(val binding: MovieItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(movie: Movie) {
             with(binding) {
                 tvMoviesTitle.text = movie.original_title
@@ -26,16 +26,16 @@ class FavouriteMovieAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavouriteMovieVH {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteMovieVH {
         val binding = MovieItemBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return FavouriteMovieVH(binding)
+        return FavoriteMovieVH(binding)
     }
 
-    override fun onBindViewHolder(holder: FavouriteMovieVH, position: Int) {
+    override fun onBindViewHolder(holder: FavoriteMovieVH, position: Int) {
         holder.bind(getItem(position))
     }
 

@@ -37,22 +37,22 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
         }
         val movie = args.movie
 
-        checkFavouriteMovie(movie)
+        checkFavoriteMovie(movie)
 
-        binding.btnAddToFavourite.setOnClickListener {
+        binding.btnAddToFavorite.setOnClickListener {
             if(movieViewModel.auth.currentUser == null) {
                 "Please login first".showToast(requireContext())
                 findNavController().navigate(R.id.loginFragment)
             } else {
-                // ADD FAVOURTIE MOVIE INTO FIREBASE
+                // ADD FAVORITE MOVIE INTO FIREBASE
                 if (movie != null) {
                     // Use logged in user's email as collection's key
                     movieViewModel.db.collection(movieViewModel.auth.currentUser.email)
                         .document(movie.id.toString())
                         .set(movie)
                         .addOnSuccessListener {
-                            "Added to Favourite".showToast(requireContext())
-                            setFavouriteMovieUI()
+                            "Added to Favorite".showToast(requireContext())
+                            setFavoriteMovieUI()
                         }
                         .addOnFailureListener {
                             it.showToast(requireContext())
@@ -61,19 +61,19 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
             }
         }
 
-        binding.btnRemoveFromFavourite.setOnClickListener {
+        binding.btnRemoveFromFavorite.setOnClickListener {
             if(movieViewModel.auth.currentUser == null) {
                 "Please login first".showToast(requireContext())
                 findNavController().navigate(R.id.loginFragment)
             } else {
-                // REMOVE FAVOURTIE MOVIE FROM FIREBASE
+                // REMOVE FAVORITE MOVIE FROM FIREBASE
                 if (movie != null) {
                     // Use logged in user's email as collection's key
                     movieViewModel.db.collection(movieViewModel.auth.currentUser.email)
                         .document(movie.id.toString())
                         .delete()
                         .addOnSuccessListener {
-                            "Removed from Favourite".showToast(requireContext())
+                            "Removed from Favorite".showToast(requireContext())
                             setNormalMovieUI()
                         }
                         .addOnFailureListener {
@@ -83,10 +83,10 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
             }
         }
 
-        // Hide favourite button if coming from favourite movielist
+        // Hide favorite button if coming from favorite movielist
         if(args.isFromFavorite) {
-            binding.btnAddToFavourite.hide()
-        } else binding.btnAddToFavourite.show()
+            binding.btnAddToFavorite.hide()
+        } else binding.btnAddToFavorite.show()
     }
 
     private fun initView(movie: Movie?) {
@@ -101,7 +101,7 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
         }
     }
 
-    private fun checkFavouriteMovie(movie: Movie?) {
+    private fun checkFavoriteMovie(movie: Movie?) {
         if(movieViewModel.auth.currentUser == null) {
             setNormalMovieUI()
             initView(movie)
@@ -116,7 +116,7 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
                             if(isRecordEmpty) {
                                 setNormalMovieUI()
                             } else {
-                                setFavouriteMovieUI()
+                                setFavoriteMovieUI()
                             }
                         }
                     }
@@ -125,16 +125,16 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
 
     }
 
-    private fun setFavouriteMovieUI() {
-        binding.btnAddToFavourite.hide()
-        binding.btnRemoveFromFavourite.show()
-        binding.ivFavouriteStars.show()
+    private fun setFavoriteMovieUI() {
+        binding.btnAddToFavorite.hide()
+        binding.btnRemoveFromFavorite.show()
+        binding.ivFavoriteStars.show()
     }
 
     private fun setNormalMovieUI() {
-        binding.btnAddToFavourite.show()
-        binding.btnRemoveFromFavourite.hide()
-        binding.ivFavouriteStars.hide()
+        binding.btnAddToFavorite.show()
+        binding.btnRemoveFromFavorite.hide()
+        binding.ivFavoriteStars.hide()
     }
 
     private fun getRatingStar(movie: Movie): Float {

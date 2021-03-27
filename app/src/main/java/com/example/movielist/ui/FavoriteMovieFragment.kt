@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movielist.R
 import com.example.movielist.databinding.FragmentFavoriteMovieBinding
 import com.example.movielist.model.Movie
-import com.example.movielist.ui.adapter.FavouriteMovieAdapter
+import com.example.movielist.ui.adapter.FavoriteMovieAdapter
 import com.example.movielist.utils.hide
 import com.example.movielist.utils.show
 import com.example.movielist.utils.showToast
@@ -20,8 +20,8 @@ class FavoriteMovieFragment: Fragment(R.layout.fragment_favorite_movie) {
 
     private lateinit var binding: FragmentFavoriteMovieBinding
     private val movieViewModel by activityViewModels<MovieViewModel>()
-    private val favouriteMovieAdapter: FavouriteMovieAdapter by lazy {
-        FavouriteMovieAdapter { navigateToDetailsFragment(it) }
+    private val favoriteMovieAdapter: FavoriteMovieAdapter by lazy {
+        FavoriteMovieAdapter { navigateToDetailsFragment(it) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,7 +29,7 @@ class FavoriteMovieFragment: Fragment(R.layout.fragment_favorite_movie) {
 
         binding.rvFavoriteMovies.run {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = favouriteMovieAdapter
+            adapter = favoriteMovieAdapter
         }
 
         movieViewModel.auth.currentUser?.email?.let { email ->
@@ -47,7 +47,7 @@ class FavoriteMovieFragment: Fragment(R.layout.fragment_favorite_movie) {
                             if(movieList.isNotEmpty()) {
                                 binding.tvEmptySearch.hide()
                                 binding.rvFavoriteMovies.show()
-                                favouriteMovieAdapter.submitList(movieList)
+                                favoriteMovieAdapter.submitList(movieList)
                             } else {
                                 binding.tvEmptySearch.show()
                                 binding.rvFavoriteMovies.hide()

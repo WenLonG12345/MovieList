@@ -79,7 +79,7 @@ class MovieFragment: Fragment(R.layout.fragment_movie) {
             }
         }
 
-        binding.ivFavouriteMovie.setOnClickListener {
+        binding.ivFavoriteMovie.setOnClickListener {
             if(movieViewModel.auth.currentUser == null) {
                 findNavController().navigate(R.id.loginFragment)
                 "Please login first".showToast(requireContext())
