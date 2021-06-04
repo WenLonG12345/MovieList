@@ -1,9 +1,9 @@
 package com.example.movielist.ui
 
-import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
-import android.widget.EditText
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -14,7 +14,9 @@ import com.example.movielist.R
 import com.example.movielist.databinding.FragmentMovieBinding
 import com.example.movielist.model.Movie
 import com.example.movielist.ui.adapter.MovieAdapter
+import com.example.movielist.ui.adapter.PagingFooterAdapter
 import com.example.movielist.utils.hide
+import com.example.movielist.utils.onQueryTextSubmit
 import com.example.movielist.utils.show
 import com.example.movielist.utils.showToast
 import com.example.movielist.viewmodel.MovieViewModel
@@ -29,19 +31,17 @@ class MovieFragment: Fragment(R.layout.fragment_movie) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentMovieBinding.bind(view)
+        setHasOptionsMenu(true)
 
         binding.rvMovies.run {
+            val footerAdapter = PagingFooterAdapter { movieAdapter.retry() }
+            adapter = movieAdapter.withLoadStateFooter(footerAdapter)
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = movieAdapter
         }
 
         movieViewModel.movies.observe(viewLifecycleOwner, { pagingData ->
             movieAdapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
         })
-
-        movieViewModel.auth.currentUser?.let { user ->
-            binding.ivProfile.setImageURI(user.photoUrl)
-        }
 
         movieAdapter.addLoadStateListener { loadState ->
             when(loadState.refresh) {
@@ -70,56 +70,20 @@ class MovieFragment: Fragment(R.layout.fragment_movie) {
                 binding.tvEmptySearch.hide()
             }
         }
+    }
 
-        binding.ivProfile.setOnClickListener {
-            if(movieViewModel.auth.currentUser == null) {
-                findNavController().navigate(R.id.loginFragment)
-            } else {
-                findNavController().navigate(R.id.profileFragment)
-            }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_movie_list, menu)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.onQueryTextSubmit {
+            movieViewModel.setSearchQuery(it)
         }
-
-        binding.ivFavoriteMovie.setOnClickListener {
-            if(movieViewModel.auth.currentUser == null) {
-                findNavController().navigate(R.id.loginFragment)
-                "Please login first".showToast(requireContext())
-            } else {
-                findNavController().navigate(R.id.favoriteMovieFragment)
-            }
-        }
-
-        binding.movieSearchView.apply {
-            setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    if(query != null) {
-                        binding.rvMovies.scrollToPosition(0)
-                        movieViewModel.setSearchQuery(query)
-                        binding.movieSearchView.clearFocus()
-                    }
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    newText?.let {
-                        if(newText.isEmpty()) {
-                            movieViewModel.setSearchQuery("")
-                        }
-                    }
-
-                    return true
-                }
-            })
-        }
-
-        binding.movieSearchView.setOnCloseListener {
+        searchView.setOnCloseListener {
             movieViewModel.setSearchQuery("")
             false
         }
-
-        // set searchview text & hint text to white
-        val searchEt = binding.movieSearchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
-        searchEt.setTextColor(Color.WHITE)
-        searchEt.setHintTextColor(Color.WHITE)
     }
 
 

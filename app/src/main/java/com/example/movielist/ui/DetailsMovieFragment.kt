@@ -47,16 +47,19 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
                 // ADD FAVORITE MOVIE INTO FIREBASE
                 if (movie != null) {
                     // Use logged in user's email as collection's key
-                    movieViewModel.db.collection(movieViewModel.auth.currentUser.email)
-                        .document(movie.id.toString())
-                        .set(movie)
-                        .addOnSuccessListener {
-                            "Added to Favorite".showToast(requireContext())
-                            setFavoriteMovieUI()
-                        }
-                        .addOnFailureListener {
-                            it.showToast(requireContext())
-                        }
+                    movieViewModel.auth.currentUser?.email?.let {
+                        movieViewModel.db.collection(it)
+                            .document(movie.id.toString())
+                            .set(movie)
+                            .addOnSuccessListener {
+                                "Added to Favorite".showToast(requireContext())
+                                setFavoriteMovieUI()
+                            }
+                            .addOnFailureListener {
+                                it.showToast(requireContext())
+                            }
+                    }
+
                 }
             }
         }
@@ -69,16 +72,19 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
                 // REMOVE FAVORITE MOVIE FROM FIREBASE
                 if (movie != null) {
                     // Use logged in user's email as collection's key
-                    movieViewModel.db.collection(movieViewModel.auth.currentUser.email)
-                        .document(movie.id.toString())
-                        .delete()
-                        .addOnSuccessListener {
-                            "Removed from Favorite".showToast(requireContext())
-                            setNormalMovieUI()
-                        }
-                        .addOnFailureListener {
-                            it.showToast(requireContext())
-                        }
+                    movieViewModel.auth.currentUser?.email?.let {
+                        movieViewModel.db.collection(it)
+                            .document(movie.id.toString())
+                            .delete()
+                            .addOnSuccessListener {
+                                "Removed from Favorite".showToast(requireContext())
+                                setNormalMovieUI()
+                            }
+                            .addOnFailureListener {
+                                it.showToast(requireContext())
+                            }
+                    }
+
                 }
             }
         }
@@ -106,23 +112,15 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
             setNormalMovieUI()
             initView(movie)
         } else {
-            val collectRef = movieViewModel.db.collection(movieViewModel.auth.currentUser.email)
-            collectRef.whereEqualTo("id", movie?.id)
-                .get().addOnCompleteListener { task ->
-                    if(task.isSuccessful) {
-                        task.result?.let {
-                            initView(movie)
-                            val isRecordEmpty = it.isEmpty
-                            if(isRecordEmpty) {
-                                setNormalMovieUI()
-                            } else {
-                                setFavoriteMovieUI()
-                            }
-                        }
-                    }
+            movieViewModel.getMovieFromFirestore(movie).observe(viewLifecycleOwner, {
+                initView(movie)
+                if(it.isNotEmpty()) {
+                    setFavoriteMovieUI()
+                } else {
+                    setNormalMovieUI()
                 }
+            })
         }
-
     }
 
     private fun setFavoriteMovieUI() {

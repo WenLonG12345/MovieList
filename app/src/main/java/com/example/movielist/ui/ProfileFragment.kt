@@ -2,6 +2,7 @@ package com.example.movielist.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -18,6 +19,9 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentProfileBinding.bind(view)
 
+        binding.rlProfile.isVisible = movieViewModel.auth.currentUser != null
+        binding.llLoginFirst.isVisible = movieViewModel.auth.currentUser == null
+
         movieViewModel.auth.currentUser?.let { user ->
             binding.ivUserAvatar.setImageURI(user.photoUrl)
             binding.tvUserName.text = user.email
@@ -29,5 +33,9 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
             findNavController().navigateUp()
         }
 
+        binding.btnLogin.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToLoginFragment()
+            findNavController().navigate(action)
+        }
     }
 }

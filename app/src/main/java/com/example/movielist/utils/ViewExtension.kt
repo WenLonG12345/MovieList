@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 
 fun View.show(): View {
     if(visibility != View.VISIBLE) {
@@ -27,15 +28,17 @@ fun Any.showToast(context: Context, duration: Int = Toast.LENGTH_SHORT): Toast {
     return Toast.makeText(context, this.toString(), duration).apply { show() }
 }
 
-fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
+inline fun SearchView.onQueryTextSubmit(crossinline listener: (String) -> Unit) {
+    this.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            listener(query.orEmpty())
+            return true
         }
 
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onQueryTextChange(newText: String?): Boolean {
 
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            return true
+        }
     })
 }
 

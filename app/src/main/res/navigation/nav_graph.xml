@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/movieFragment"
         android:name="com.example.movielist.ui.MovieFragment"
-        android:label="MovieFragment"
+        android:label="Movie"
         tools:layout="@layout/fragment_movie" >
         <action
             android:id="@+id/action_movieFragment_to_loginFragment"
@@ -23,25 +23,31 @@
     <fragment
         android:id="@+id/favoriteMovieFragment"
         android:name="com.example.movielist.ui.FavoriteMovieFragment"
-        android:label="FavoriteMovieFragment"
+        android:label="Favourite Movie"
         tools:layout="@layout/fragment_favorite_movie">
         <action
             android:id="@+id/action_favoriteMovieFragment_to_detailsMovieFragment"
             app:destination="@id/detailsMovieFragment" />
+        <action
+            android:id="@+id/action_favoriteMovieFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.movielist.ui.ProfileFragment"
-        android:label="ProfileFragment"
+        android:label="Profile"
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_favoriteMovieFragment"
             app:destination="@id/favoriteMovieFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.movielist.ui.LoginFragment"
-        android:label="LoginFragment"
+        android:label="Login"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_signupFragment"
@@ -50,7 +56,7 @@
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.example.movielist.ui.SignupFragment"
-        android:label="SignupFragment"
+        android:label="Sign Up"
         tools:layout="@layout/fragment_sign_up">
         <action
             android:id="@+id/action_signupFragment_to_movieFragment"
@@ -61,7 +67,7 @@
     <fragment
         android:id="@+id/detailsMovieFragment"
         android:name="com.example.movielist.ui.DetailsMovieFragment"
-        android:label="DetailsMovieFragment"
+        android:label="Details"
         tools:layout="@layout/fragment_details_movie">
         <argument
             android:name="movie"

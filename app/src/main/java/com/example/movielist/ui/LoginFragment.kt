@@ -2,6 +2,8 @@ package com.example.movielist.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -49,14 +51,10 @@ class LoginFragment: Fragment(R.layout.fragment_login) {
         movieViewModel.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             try{
                 if(task.isSuccessful) {
-
                     "Successfully Log In".showToast(requireContext())
                     findNavController().navigateUp()
-
                 } else {
-                    task.exception?.let {
-                        throw it
-                    }
+                    task.exception?.let { throw it }
                 }
             }catch (e: Exception) {
                 e.message?.showToast(requireContext())

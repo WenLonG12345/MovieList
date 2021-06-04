@@ -1,34 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/line1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3"/>
-
     <RelativeLayout
-        android:id="@+id/rl_user"
+        android:id="@+id/rl_profile"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/ocean_blue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/line1">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/iv_background"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/ocean_blue"/>
 
         <ImageView
             android:id="@+id/iv_user_avatar"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
             android:src="@drawable/ic_baseline_person_24_white"
-            android:layout_centerInParent="true" />
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/tv_user_name"
@@ -37,23 +33,53 @@
             android:layout_below="@id/iv_user_avatar"
             android:text="USERNAME"
             android:textColor="@color/white"
-            android:layout_centerInParent="true"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_below="@id/iv_background"
+            android:padding="10dp"
+            app:icon="@drawable/ic_baseline_logout_24"
+            android:text="Logout"/>
 
     </RelativeLayout>
 
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_logout"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/ll_login_first"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/line1"
-        android:layout_margin="20dp"
-        android:padding="10dp"
-        app:icon="@drawable/ic_baseline_logout_24"
-        android:text="Logout"/>
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/ic_login_secure"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please Login First"
+            android:layout_gravity="center"
+            android:textSize="20sp"/>
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="Proceed to Login"/>
 
 
+    </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

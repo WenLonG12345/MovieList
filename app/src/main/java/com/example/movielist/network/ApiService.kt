@@ -1,6 +1,7 @@
 package com.example.movielist.network
 
 import com.example.movielist.model.MovieListResponse
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -20,16 +21,9 @@ interface ApiService {
         @Query("query") query: String
     ) : MovieListResponse
 
-
-    companion object{
-        private const val BASE_URL = "https://api.themoviedb.org/3/"
-
-        fun create(): ApiService {
-            return Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(ApiService::class.java)
-        }
-    }
+    @GET("movie/upcoming")
+    suspend fun getUpcomingMovie(
+        @Query("api_key") apiKey: String,
+        @Query("page") page: Int
+    ) : Response<MovieListResponse>
 }

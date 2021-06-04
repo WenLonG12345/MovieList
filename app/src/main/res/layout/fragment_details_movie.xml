@@ -47,40 +47,34 @@
             android:layout_width="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:orientation="vertical">
+                android:layout_width="match_parent">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_real_name"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="wrap_content"
+                    android:text="REAL NAME"
+                    android:textSize="32sp" />
 
-                    <TextView
-                        android:id="@+id/tv_real_name"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_width="wrap_content"
-                        android:textSize="32sp" />
+                <ImageView
+                    android:id="@+id/iv_favorite_stars"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_favorite"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="25dp"
+                    android:visibility="gone"/>
 
-                    <ImageView
-                        android:id="@+id/iv_favorite_stars"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_favorite"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="25dp"
-                        android:visibility="gone"/>
-
-                </RelativeLayout>
 
                 <RatingBar
-                    style="?android:attr/ratingBarStyleSmall"
                     android:id="@+id/rb_rating"
                     android:isIndicator="true"
                     android:layout_height="wrap_content"
@@ -88,7 +82,9 @@
                     android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
                     android:numStars="5"
-                    android:stepSize="0.1" />
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:stepSize="0.1"
+                    android:layout_below="@id/tv_real_name"/>
 
                 <TextView
                     android:id="@+id/tv_release_date"
@@ -98,7 +94,27 @@
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:lineSpacingMultiplier="1.2"
+                    android:layout_below="@id/rb_rating"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                <ImageView
+                    android:id="@+id/iv_overview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_baseline_bookmark_24"
+                    android:layout_below="@id/tv_release_date"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Overview"
+                    android:textSize="18sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/iv_overview"
+                    android:layout_below="@id/tv_release_date"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
 
                 <TextView
                     android:id="@+id/tv_overview"
@@ -109,15 +125,18 @@
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:lineSpacingMultiplier="1.2"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:layout_below="@id/iv_overview"
+                    android:text="DESCRIPTION"/>
 
                 <ProgressBar
                     android:id="@+id/progress_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_centerInParent="true"
+                    android:visibility="visible"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </androidx.core.widget.NestedScrollView>
 

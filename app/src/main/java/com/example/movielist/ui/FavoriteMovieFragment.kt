@@ -2,6 +2,7 @@ package com.example.movielist.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -30,6 +31,14 @@ class FavoriteMovieFragment: Fragment(R.layout.fragment_favorite_movie) {
         binding.rvFavoriteMovies.run {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = favoriteMovieAdapter
+        }
+
+        binding.llLoginFirst.isVisible = movieViewModel.auth.currentUser == null
+        binding.progressBar.isVisible = movieViewModel.auth.currentUser != null
+
+        binding.btnLogin.setOnClickListener {
+            val action = FavoriteMovieFragmentDirections.actionFavoriteMovieFragmentToLoginFragment()
+            findNavController().navigate(action)
         }
 
         movieViewModel.auth.currentUser?.email?.let { email ->

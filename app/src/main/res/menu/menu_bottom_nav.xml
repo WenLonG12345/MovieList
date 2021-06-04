@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/movieFragment"
+        android:icon="@drawable/ic_favorite_movie"
+        android:title="Movies"
+        app:showAsAction="always"
+        android:orderInCategory="1"/>
+
+    <item
+        android:id="@+id/favoriteMovieFragment"
+        android:icon="@drawable/ic_baseline_star_24"
+        android:title="My Favourite"
+        app:showAsAction="always"
+        android:orderInCategory="2"/>
+
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/ic_baseline_person_24_white"
+        android:title="Profile"
+        app:showAsAction="always"
+        android:orderInCategory="3"/>
+
+</menu>
