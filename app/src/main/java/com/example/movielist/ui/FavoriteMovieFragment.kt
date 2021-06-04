@@ -9,10 +9,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movielist.R
 import com.example.movielist.databinding.FragmentFavoriteMovieBinding
+import com.example.movielist.model.ApiStatus
 import com.example.movielist.model.Movie
 import com.example.movielist.ui.adapter.FavoriteMovieAdapter
-import com.example.movielist.utils.hide
-import com.example.movielist.utils.show
 import com.example.movielist.utils.showToast
 import com.example.movielist.viewmodel.MovieViewModel
 
@@ -41,32 +40,23 @@ class FavoriteMovieFragment: Fragment(R.layout.fragment_favorite_movie) {
             findNavController().navigate(action)
         }
 
-        movieViewModel.auth.currentUser?.email?.let { email ->
-            movieViewModel.db.collection(email).get()
-                .addOnCompleteListener { task ->
-                    binding.progressBar.hide()
-                    val movieList = mutableListOf<Movie>()
-                    if(task.isSuccessful) {
-                        if(task.result != null) {
-                            for (document in task.result!!) {
-                                val movie = document.toObject(Movie::class.java)
-                                movieList.add(movie)
-                            }
+        movieViewModel.onGetFavMovieFromFirestore().observe(viewLifecycleOwner, { result ->
+            binding.progressBar.isVisible = result.status == ApiStatus.LOADING
 
-                            if(movieList.isNotEmpty()) {
-                                binding.tvEmptySearch.hide()
-                                binding.rvFavoriteMovies.show()
-                                favoriteMovieAdapter.submitList(movieList)
-                            } else {
-                                binding.tvEmptySearch.show()
-                                binding.rvFavoriteMovies.hide()
-                            }
+            when(result.status) {
+                ApiStatus.SUCCESS -> {
+                    result.data?.let {
+                        binding.tvEmptySearch.isVisible = it.isEmpty()
+                        binding.rvFavoriteMovies.isVisible = it.isNotEmpty()
+                        if(it.isNotEmpty()) {
+                            favoriteMovieAdapter.submitList(it)
                         }
-                    } else {
-                        "Fetch data failed".showToast(requireContext())
                     }
                 }
-        }
+                ApiStatus.ERROR -> result.message?.showToast(requireContext())
+                ApiStatus.LOADING -> Unit
+            }
+        })
     }
 
     private fun navigateToDetailsFragment(movie: Movie) {

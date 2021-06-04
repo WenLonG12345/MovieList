@@ -1,44 +1,142 @@
 package com.example.movielist.repository
 
-import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.liveData
-import com.example.movielist.BuildConfig
+import com.example.movielist.model.ApiResult
 import com.example.movielist.model.Movie
+import com.example.movielist.model.SortOrder
+import com.example.movielist.model.SortOrder.*
 import com.example.movielist.network.ApiService
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import timber.log.Timber
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 import javax.inject.Inject
+import kotlin.coroutines.suspendCoroutine
 
 class MovieRepository @Inject constructor(
     private val apiService: ApiService
 ) {
 
-    fun getMovieListStream(): LiveData<PagingData<Movie>> {
-        return Pager(
-            config = PagingConfig(PAGE_SIZE),
-            pagingSourceFactory = { MoviePagingSource(apiService)}
-        ).liveData
+    companion object {
+        private const val PAGE_SIZE = 50
     }
+
+    fun getMovieListStream(sortOrder: SortOrder) =
+        when(sortOrder) {
+            BY_UPCOMING -> Pager(
+                config = PagingConfig(PAGE_SIZE),
+                pagingSourceFactory = { UpcomingMoviePagingSource(apiService)}
+            ).flow
+
+            BY_POPULAR -> Pager(
+                config = PagingConfig(PAGE_SIZE),
+                pagingSourceFactory = { PopularMoviePagingSource(apiService)}
+            ).flow
+
+            BY_TOP_RATED -> Pager(
+                config = PagingConfig(PAGE_SIZE),
+                pagingSourceFactory = { TopRatedMoviePagingSource(apiService)}
+            ).flow
+        }
 
     fun getSearchMovieListStream(query: String) =
         Pager(
             config = PagingConfig(PAGE_SIZE),
             pagingSourceFactory = { SearchPagingSource(apiService, query)}
-        ).liveData
+        ).flow
 
-    companion object {
-        private const val PAGE_SIZE = 50
+
+    fun getFavMovieFromFirestore(firestore: FirebaseFirestore, user: FirebaseUser?): Flow<ApiResult<List<Movie>>> {
+        return flow {
+            try {
+                emit(ApiResult.Loading(true))
+
+                user?.email?.let { email ->
+                    val movieList = mutableListOf<Movie>()
+
+                    val docList = firestore.collection(email).get().await().documents
+
+                    for(doc in docList) {
+                        val movie = doc.toObject(Movie::class.java)
+                        movie?.let { movieList.add(it) }
+                    }
+
+                    emit(ApiResult.Success(movieList))
+                }
+            }catch (e: Exception) {
+                emit(ApiResult.Error(e.toString()))
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun getUpcomingMovie() {
-        val call = apiService.getUpcomingMovie(BuildConfig.TMDB_API_KEY, 1)
-        if(call.isSuccessful) {
-            Timber.i("MOVIE - ${call.body()?.results}")
-        } else {
-            Timber.i("LOAD ERROR")
-        }
+    fun addFavMovToFirestore(firestore: FirebaseFirestore, user: FirebaseUser?, movie: Movie): Flow<ApiResult<Boolean>> {
+       return flow {
+           try{
+               emit(ApiResult.Loading(true))
+
+               user?.email?.let { email ->
+                   firestore.collection(email)
+                       .document(movie.id.toString())
+                       .set(movie)
+                       .await()
+
+                   emit(ApiResult.Success(true))
+               }
+
+           }catch (e: Exception) {
+               emit(ApiResult.Error(e.toString()))
+           }
+       }.flowOn(Dispatchers.IO)
+    }
+
+    fun deleteFavMovieFromFirestore(firestore: FirebaseFirestore, user: FirebaseUser?, movie: Movie): Flow<ApiResult<Boolean>> {
+        return flow {
+            try{
+                emit(ApiResult.Loading(true))
+
+                user?.email?.let { email ->
+                    firestore.collection(email)
+                        .document(movie.id.toString())
+                        .delete()
+                        .await()
+
+                    emit(ApiResult.Success(true))
+                }
+
+            }catch (e: Exception) {
+                emit(ApiResult.Error(e.toString()))
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    fun checkFavMovieInFirestore(firestore: FirebaseFirestore, user: FirebaseUser?, movie: Movie): Flow<ApiResult<Boolean>> {
+        return flow{
+           try{
+               emit(ApiResult.Loading(true))
+
+               user?.email?.let {
+                   val result = firestore.collection(it)
+                       .whereEqualTo("id", movie.id)
+                       .get()
+                       .await()
+                       .documents
+
+                   if(result.isNotEmpty()) {
+                       emit(ApiResult.Success(true))
+                   } else {
+                       emit(ApiResult.Success(false))
+                   }
+               }
+           }catch (e: Exception) {
+               emit(ApiResult.Error(e.toString()))
+           }
+        }.flowOn(Dispatchers.IO)
     }
 }

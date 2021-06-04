@@ -3,6 +3,7 @@ package com.example.movielist.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movielist.R
 import com.example.movielist.databinding.FragmentMovieBinding
 import com.example.movielist.model.Movie
+import com.example.movielist.model.SortOrder
 import com.example.movielist.ui.adapter.MovieAdapter
 import com.example.movielist.ui.adapter.PagingFooterAdapter
 import com.example.movielist.utils.hide
@@ -78,13 +80,35 @@ class MovieFragment: Fragment(R.layout.fragment_movie) {
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
         searchView.onQueryTextSubmit {
-            movieViewModel.setSearchQuery(it)
+            movieViewModel.searchQuery.value = it
         }
         searchView.setOnCloseListener {
-            movieViewModel.setSearchQuery("")
+            movieViewModel.searchQuery.value = ""
             false
         }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_movie_upcoming -> {
+                movieViewModel.sortOrder.value = SortOrder.BY_UPCOMING
+                true
+            }
+
+            R.id.action_movie_popular -> {
+                movieViewModel.sortOrder.value = SortOrder.BY_POPULAR
+                true
+            }
+
+            R.id.action_movie_top_rated -> {
+                movieViewModel.sortOrder.value = SortOrder.BY_TOP_RATED
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
 
 
     private fun navigateToDetailsFragment(movie: Movie) {

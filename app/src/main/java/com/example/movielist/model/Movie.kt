@@ -20,11 +20,9 @@ data class Movie(
 ): Parcelable
 
 
-class MovieListResponse : ListResponse<Movie>()
-
-open class ListResponse<Item> {
-    @SerializedName("total_pages") val totalPages: Int? = null
-    @SerializedName("total_results") val totalResults: Int? = null
-    @SerializedName("results") val results: List<Item> = emptyList()
-    @SerializedName("page") val page: Int? = null
-}
+data class MovieResponse(
+    @SerializedName("page") val page: Int,
+    @SerializedName("results") val results: List<Movie>,
+    @SerializedName("total_pages") val total_pages: Int,
+    @SerializedName("total_results") val total_results: Int
+)

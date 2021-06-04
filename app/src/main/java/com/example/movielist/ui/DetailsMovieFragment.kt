@@ -2,18 +2,25 @@ package com.example.movielist.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import com.example.movielist.R
 import com.example.movielist.databinding.FragmentDetailsMovieBinding
+import com.example.movielist.model.ApiStatus
+import com.example.movielist.model.ApiStatus.*
+import com.example.movielist.model.FirebaseEvent
 import com.example.movielist.model.Movie
+import com.example.movielist.utils.Constants.IMAGE_DOMAIN
 import com.example.movielist.utils.hide
 import com.example.movielist.utils.show
 import com.example.movielist.utils.showToast
 import com.example.movielist.viewmodel.MovieViewModel
+import kotlinx.coroutines.flow.collect
 
 
 class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
@@ -22,77 +29,59 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
     private val args by navArgs<DetailsMovieFragmentArgs>()
     private val movieViewModel by activityViewModels<MovieViewModel>()
 
-    companion object{
-        const val IMAGE_DOMAIN = "https://image.tmdb.org/t/p/w500/"
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentDetailsMovieBinding.bind(view)
 
-        binding.toolbar.apply {
-            setNavigationIcon(R.drawable.ic_baseline_arrow_back_24)
-            setNavigationOnClickListener {
-                findNavController().navigateUp()
-            }
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
         }
         val movie = args.movie
+        initView(movie)
+        movieViewModel.onCheckFavMovieInFirestore(movie)
 
-        checkFavoriteMovie(movie)
+        // Hide favorite button if coming from favorite movielist
+        binding.btnAddToFavorite.isVisible = !args.isFromFavorite
 
         binding.btnAddToFavorite.setOnClickListener {
-            if(movieViewModel.auth.currentUser == null) {
-                "Please login first".showToast(requireContext())
-                findNavController().navigate(R.id.loginFragment)
-            } else {
-                // ADD FAVORITE MOVIE INTO FIREBASE
-                if (movie != null) {
-                    // Use logged in user's email as collection's key
-                    movieViewModel.auth.currentUser?.email?.let {
-                        movieViewModel.db.collection(it)
-                            .document(movie.id.toString())
-                            .set(movie)
-                            .addOnSuccessListener {
-                                "Added to Favorite".showToast(requireContext())
-                                setFavoriteMovieUI()
-                            }
-                            .addOnFailureListener {
-                                it.showToast(requireContext())
-                            }
-                    }
-
-                }
+            if(movie != null) {
+                movieViewModel.onAddFavMovieToFirestore(movie)
             }
         }
 
         binding.btnRemoveFromFavorite.setOnClickListener {
-            if(movieViewModel.auth.currentUser == null) {
-                "Please login first".showToast(requireContext())
-                findNavController().navigate(R.id.loginFragment)
-            } else {
-                // REMOVE FAVORITE MOVIE FROM FIREBASE
-                if (movie != null) {
-                    // Use logged in user's email as collection's key
-                    movieViewModel.auth.currentUser?.email?.let {
-                        movieViewModel.db.collection(it)
-                            .document(movie.id.toString())
-                            .delete()
-                            .addOnSuccessListener {
-                                "Removed from Favorite".showToast(requireContext())
-                                setNormalMovieUI()
-                            }
-                            .addOnFailureListener {
-                                it.showToast(requireContext())
-                            }
-                    }
-
-                }
+            if(movie != null) {
+                movieViewModel.onDeleteFavMovieFromFirestore(movie)
             }
         }
 
-        // Hide favorite button if coming from favorite movielist
-        if(args.isFromFavorite) {
-            binding.btnAddToFavorite.hide()
-        } else binding.btnAddToFavorite.show()
+        lifecycleScope.launchWhenStarted {
+            movieViewModel.firebaseEvent.collect { event ->
+                when(event) {
+                    is FirebaseEvent.AddFavMovieToFirestore -> {
+                        event.msg?.showToast(requireContext())
+                        if(event.status) {
+                            setFavoriteMovieUI()
+                        }
+                    }
+                    is FirebaseEvent.DeleteFavMovieFromFirestore -> {
+                        event.msg?.showToast(requireContext())
+                        if(event.status) {
+                            setNormalMovieUI()
+                        }
+                    }
+                    is FirebaseEvent.NavigateToLoginFragment -> {
+                        event.msg.showToast(requireContext())
+                        findNavController().navigate(R.id.loginFragment)
+                    }
+                    is FirebaseEvent.CheckIsFavMovie -> {
+                        if(event.status) {
+                            setFavoriteMovieUI()
+                        } else setNormalMovieUI()
+                    }
+                }
+            }
+        }
     }
 
     private fun initView(movie: Movie?) {
@@ -104,22 +93,6 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
 
             binding.tvOverview.text = it.overview
             binding.rbRating.rating = getRatingStar(it)
-        }
-    }
-
-    private fun checkFavoriteMovie(movie: Movie?) {
-        if(movieViewModel.auth.currentUser == null) {
-            setNormalMovieUI()
-            initView(movie)
-        } else {
-            movieViewModel.getMovieFromFirestore(movie).observe(viewLifecycleOwner, {
-                initView(movie)
-                if(it.isNotEmpty()) {
-                    setFavoriteMovieUI()
-                } else {
-                    setNormalMovieUI()
-                }
-            })
         }
     }
 
