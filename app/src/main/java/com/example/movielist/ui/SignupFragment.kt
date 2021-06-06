@@ -7,6 +7,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.movielist.R
 import com.example.movielist.databinding.FragmentSignUpBinding
+import com.example.movielist.model.ApiStatus
+import com.example.movielist.model.ApiStatus.*
 import com.example.movielist.utils.isEmailValid
 import com.example.movielist.utils.isPasswordValid
 import com.example.movielist.utils.showToast
@@ -47,20 +49,16 @@ class SignupFragment: Fragment(R.layout.fragment_sign_up) {
     }
 
     private fun signUpUser(email: String, password: String) {
-        movieViewModel.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            try{
-                if(task.isSuccessful) {
+        movieViewModel.onCreateNewUser(email, password).observe(viewLifecycleOwner, { result ->
+            when(result.status) {
+                SUCCESS -> {
                     "Successfully Registered".showToast(requireContext())
                     val action = SignupFragmentDirections.actionSignupFragmentToMovieFragment()
                     findNavController().navigate(action)
-                } else {
-                   task.exception?.let {
-                       throw it
-                   }
                 }
-            }catch (e: Exception) {
-                e.message?.showToast(requireContext())
+                ERROR -> result.message?.showToast(requireContext())
+                LOADING -> Unit
             }
-        }
+        })
     }
 }

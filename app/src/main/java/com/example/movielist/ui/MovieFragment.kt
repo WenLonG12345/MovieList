@@ -45,6 +45,7 @@ class MovieFragment: Fragment(R.layout.fragment_movie) {
             movieAdapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
         })
 
+
         movieAdapter.addLoadStateListener { loadState ->
             when(loadState.refresh) {
                 is LoadState.NotLoading -> {
@@ -53,11 +54,13 @@ class MovieFragment: Fragment(R.layout.fragment_movie) {
                 }
                 is LoadState.Loading -> {
                     binding.progressBar.show()
+                    binding.llOffline.hide()
                     binding.rvMovies.hide()
                 }
                 is LoadState.Error -> {
                     val state = loadState.refresh as LoadState.Error
                     binding.progressBar.hide()
+                    binding.llOffline.show()
                     "Load Error: ${state.error.message}".showToast(requireContext())
                 }
             }
@@ -71,6 +74,10 @@ class MovieFragment: Fragment(R.layout.fragment_movie) {
             } else {
                 binding.tvEmptySearch.hide()
             }
+        }
+
+        binding.btnOfflineRetry.setOnClickListener {
+            movieAdapter.retry()
         }
     }
 

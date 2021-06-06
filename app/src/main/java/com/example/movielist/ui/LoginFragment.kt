@@ -9,6 +9,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.movielist.R
 import com.example.movielist.databinding.FragmentLoginBinding
+import com.example.movielist.model.ApiStatus
+import com.example.movielist.model.ApiStatus.*
 import com.example.movielist.utils.isEmailValid
 import com.example.movielist.utils.isPasswordValid
 import com.example.movielist.utils.showToast
@@ -48,17 +50,15 @@ class LoginFragment: Fragment(R.layout.fragment_login) {
     }
 
     private fun loginUser(email: String, password: String) {
-        movieViewModel.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            try{
-                if(task.isSuccessful) {
+        movieViewModel.onSignIn(email, password).observe(viewLifecycleOwner, { result ->
+            when(result.status) {
+                SUCCESS -> {
                     "Successfully Log In".showToast(requireContext())
                     findNavController().navigateUp()
-                } else {
-                    task.exception?.let { throw it }
                 }
-            }catch (e: Exception) {
-                e.message?.showToast(requireContext())
+                ERROR -> result.message?.showToast(requireContext())
+                LOADING -> Unit
             }
-        }
+        })
     }
 }

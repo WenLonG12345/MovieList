@@ -17,7 +17,7 @@ class FavoriteMovieAdapter(
         fun bind(movie: Movie) {
             with(binding) {
                 tvMoviesTitle.text = movie.original_title
-                ivMoviesPoster.load(MovieAdapter.IMAGE_DOMAIN + movie.backdrop_path)
+                ivMoviesPoster.load(IMAGE_DOMAIN + movie.backdrop_path)
 
                 rlMovie.setOnClickListener {
                     onClick(movie)

@@ -2,11 +2,15 @@ package com.example.movielist.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import com.example.movielist.BuildConfig
 import com.example.movielist.model.ApiResult
 import com.example.movielist.model.Movie
 import com.example.movielist.model.SortOrder
 import com.example.movielist.model.SortOrder.*
+import com.example.movielist.model.Video
 import com.example.movielist.network.ApiService
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
@@ -138,5 +142,41 @@ class MovieRepository @Inject constructor(
                emit(ApiResult.Error(e.toString()))
            }
         }.flowOn(Dispatchers.IO)
+    }
+
+    fun signIn(auth: FirebaseAuth, email: String, password: String): Flow<ApiResult<AuthResult>> {
+        return flow {
+            emit(ApiResult.Loading(true))
+            try {
+                val result = auth.signInWithEmailAndPassword(email, password)
+                    .await()
+                emit(ApiResult.Success(result))
+            }catch (e: Exception) {
+                emit(ApiResult.Error(e.toString()))
+            }
+        }
+    }
+
+    fun createNewUser(auth: FirebaseAuth, email: String, password: String): Flow<ApiResult<AuthResult>> {
+        return flow {
+            emit(ApiResult.Loading(true))
+            try {
+                val result = auth.createUserWithEmailAndPassword(email, password)
+                    .await()
+                emit(ApiResult.Success(result))
+            }catch (e: Exception) {
+                emit(ApiResult.Error(e.toString()))
+            }
+        }
+    }
+
+    fun loadVideoList(movieId: Int) = flow{
+            val call = apiService.fetchTrailer(movieId, BuildConfig.TMDB_API_KEY)
+
+            if(call.isSuccessful) {
+                call.body()?.let {
+                    emit(it.results)
+                }
+            }
     }
 }

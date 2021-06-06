@@ -1,7 +1,10 @@
 package com.example.movielist.network
 
 import com.example.movielist.model.MovieResponse
+import com.example.movielist.model.VideoListResponse
+import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -30,6 +33,10 @@ interface ApiService {
         @Query("query") query: String
     ) : MovieResponse
 
-
+    @GET("movie/{movie_id}/videos")
+    suspend fun fetchTrailer(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): Response<VideoListResponse>
 
 }

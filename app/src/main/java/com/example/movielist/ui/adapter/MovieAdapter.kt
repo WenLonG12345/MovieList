@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.movielist.databinding.MovieItemBinding
 import com.example.movielist.model.Movie
+import com.example.movielist.utils.Constants.IMAGE_DOMAIN
 
 class MovieAdapter(
     val onClick: (Movie) -> Unit
@@ -39,13 +41,10 @@ class MovieAdapter(
             parent,
             false
         )
-
         return MovieVH(binding)
     }
 
     companion object{
-        const val IMAGE_DOMAIN = "https://image.tmdb.org/t/p/w500/"
-
         private val DiffUtils = object: DiffUtil.ItemCallback<Movie>() {
             override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.id == newItem.id

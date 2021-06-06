@@ -5,6 +5,7 @@ import androidx.paging.cachedIn
 import com.example.movielist.model.*
 import com.example.movielist.model.ApiStatus.*
 import com.example.movielist.repository.MovieRepository
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,6 +28,8 @@ class MovieViewModel @Inject constructor(
 
     val searchQuery = MutableStateFlow("")
     val sortOrder = MutableStateFlow(SortOrder.BY_UPCOMING)
+
+    val movieId = MutableStateFlow(0)
 
     private val firebaseEventChannel = Channel<FirebaseEvent>()
     val firebaseEvent = firebaseEventChannel.receiveAsFlow()
@@ -42,8 +46,12 @@ class MovieViewModel @Inject constructor(
             movieRepository.getMovieListStream(order).cachedIn(viewModelScope)
         }
     }
-
     val movies = moviesFlow.asLiveData(viewModelScope.coroutineContext)
+
+    private val trailerFlow = movieId.flatMapLatest {
+        movieRepository.loadVideoList(it)
+    }
+    val trailer = trailerFlow.asLiveData(viewModelScope.coroutineContext)
 
     fun onCheckFavMovieInFirestore(movie: Movie?) {
         viewModelScope.launch {
@@ -155,5 +163,13 @@ class MovieViewModel @Inject constructor(
 
         return movieRepository.getFavMovieFromFirestore(fireStore, auth.currentUser)
             .asLiveData(viewModelScope.coroutineContext)
+    }
+
+    fun onSignIn(email: String, password: String): LiveData<ApiResult<AuthResult>> {
+        return movieRepository.signIn(auth, email, password).asLiveData(viewModelScope.coroutineContext)
+    }
+
+   fun onCreateNewUser(email: String, password: String): LiveData<ApiResult<AuthResult>> {
+        return movieRepository.createNewUser(auth, email, password).asLiveData(viewModelScope.coroutineContext)
     }
 }

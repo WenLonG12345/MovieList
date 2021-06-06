@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.example.movielist.R
 import com.example.movielist.databinding.FragmentDetailsMovieBinding
@@ -15,6 +16,7 @@ import com.example.movielist.model.ApiStatus
 import com.example.movielist.model.ApiStatus.*
 import com.example.movielist.model.FirebaseEvent
 import com.example.movielist.model.Movie
+import com.example.movielist.ui.adapter.VideoListAdapter
 import com.example.movielist.utils.Constants.IMAGE_DOMAIN
 import com.example.movielist.utils.hide
 import com.example.movielist.utils.show
@@ -28,7 +30,7 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
     private lateinit var binding: FragmentDetailsMovieBinding
     private val args by navArgs<DetailsMovieFragmentArgs>()
     private val movieViewModel by activityViewModels<MovieViewModel>()
-
+    private val videoListAdapter by lazy { VideoListAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentDetailsMovieBinding.bind(view)
@@ -38,6 +40,7 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
         }
         val movie = args.movie
         initView(movie)
+        setupRecyclerView()
         movieViewModel.onCheckFavMovieInFirestore(movie)
 
         // Hide favorite button if coming from favorite movielist
@@ -84,9 +87,21 @@ class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
         }
     }
 
+    private fun setupRecyclerView() {
+        binding.rvTrailer.apply {
+            adapter = videoListAdapter
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        movieViewModel.trailer.observe(viewLifecycleOwner, {
+            videoListAdapter.submitList(it)
+        })
+    }
+
     private fun initView(movie: Movie?) {
         binding.progressBar.hide()
         movie?.let {
+            movieViewModel.movieId.value = it.id
             binding.imageDetail.load(IMAGE_DOMAIN + it.backdrop_path)
             binding.tvRealName.text = it.original_title
             binding.tvReleaseDate.text = it.release_date

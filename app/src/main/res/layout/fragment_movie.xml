@@ -9,7 +9,7 @@
         android:id="@+id/rv_movies"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/movie_item" />
+         />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -23,5 +23,34 @@
         android:layout_height="wrap_content"
         android:text="No Result found for this query"
         android:layout_centerInParent="true"/>
+
+    <LinearLayout
+        android:id="@+id/ll_offline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/ic_undraw_page_not_found_su7k"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Something went wrong..."
+            android:layout_gravity="center"/>
+
+        <Button
+            android:id="@+id/btn_offline_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Retry"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
 
 </RelativeLayout>
