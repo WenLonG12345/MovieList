@@ -6,11 +6,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import coil.load
 import com.example.movielist.R
 import com.example.movielist.databinding.FragmentProfileBinding
 import com.example.movielist.utils.showToast
 import com.example.movielist.viewmodel.MovieViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
     private lateinit var binding: FragmentProfileBinding
@@ -23,7 +26,9 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
         binding.llLoginFirst.isVisible = movieViewModel.auth.currentUser == null
 
         movieViewModel.auth.currentUser?.let { user ->
-            binding.ivUserAvatar.setImageURI(user.photoUrl)
+            binding.ivUserAvatar.load(user.photoUrl) {
+                placeholder(R.drawable.ic_baseline_person_24)
+            }
             binding.tvUserName.text = user.email
         }
 

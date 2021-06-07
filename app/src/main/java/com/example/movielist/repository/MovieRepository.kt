@@ -12,6 +12,7 @@ import com.example.movielist.network.ApiService
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -33,31 +34,34 @@ class MovieRepository @Inject constructor(
     }
 
     fun getMovieListStream(sortOrder: SortOrder) =
-        when(sortOrder) {
+        when (sortOrder) {
             BY_UPCOMING -> Pager(
                 config = PagingConfig(PAGE_SIZE),
-                pagingSourceFactory = { UpcomingMoviePagingSource(apiService)}
+                pagingSourceFactory = { UpcomingMoviePagingSource(apiService) }
             ).flow
 
             BY_POPULAR -> Pager(
                 config = PagingConfig(PAGE_SIZE),
-                pagingSourceFactory = { PopularMoviePagingSource(apiService)}
+                pagingSourceFactory = { PopularMoviePagingSource(apiService) }
             ).flow
 
             BY_TOP_RATED -> Pager(
                 config = PagingConfig(PAGE_SIZE),
-                pagingSourceFactory = { TopRatedMoviePagingSource(apiService)}
+                pagingSourceFactory = { TopRatedMoviePagingSource(apiService) }
             ).flow
         }
 
     fun getSearchMovieListStream(query: String) =
         Pager(
             config = PagingConfig(PAGE_SIZE),
-            pagingSourceFactory = { SearchPagingSource(apiService, query)}
+            pagingSourceFactory = { SearchPagingSource(apiService, query) }
         ).flow
 
 
-    fun getFavMovieFromFirestore(firestore: FirebaseFirestore, user: FirebaseUser?): Flow<ApiResult<List<Movie>>> {
+    fun getFavMovieFromFirestore(
+        firestore: FirebaseFirestore,
+        user: FirebaseUser?
+    ): Flow<ApiResult<List<Movie>>> {
         return flow {
             try {
                 emit(ApiResult.Loading(true))
@@ -67,42 +71,50 @@ class MovieRepository @Inject constructor(
 
                     val docList = firestore.collection(email).get().await().documents
 
-                    for(doc in docList) {
+                    for (doc in docList) {
                         val movie = doc.toObject(Movie::class.java)
                         movie?.let { movieList.add(it) }
                     }
 
                     emit(ApiResult.Success(movieList))
                 }
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 emit(ApiResult.Error(e.toString()))
             }
         }.flowOn(Dispatchers.IO)
     }
 
-    fun addFavMovToFirestore(firestore: FirebaseFirestore, user: FirebaseUser?, movie: Movie): Flow<ApiResult<Boolean>> {
-       return flow {
-           try{
-               emit(ApiResult.Loading(true))
+    fun addFavMovToFirestore(
+        firestore: FirebaseFirestore,
+        user: FirebaseUser?,
+        movie: Movie
+    ): Flow<ApiResult<Boolean>> {
+        return flow {
+            try {
+                emit(ApiResult.Loading(true))
 
-               user?.email?.let { email ->
-                   firestore.collection(email)
-                       .document(movie.id.toString())
-                       .set(movie)
-                       .await()
+                user?.email?.let { email ->
+                    firestore.collection(email)
+                        .document(movie.id.toString())
+                        .set(movie)
+                        .await()
 
-                   emit(ApiResult.Success(true))
-               }
+                    emit(ApiResult.Success(true))
+                }
 
-           }catch (e: Exception) {
-               emit(ApiResult.Error(e.toString()))
-           }
-       }.flowOn(Dispatchers.IO)
+            } catch (e: Exception) {
+                emit(ApiResult.Error(e.toString()))
+            }
+        }.flowOn(Dispatchers.IO)
     }
 
-    fun deleteFavMovieFromFirestore(firestore: FirebaseFirestore, user: FirebaseUser?, movie: Movie): Flow<ApiResult<Boolean>> {
+    fun deleteFavMovieFromFirestore(
+        firestore: FirebaseFirestore,
+        user: FirebaseUser?,
+        movie: Movie
+    ): Flow<ApiResult<Boolean>> {
         return flow {
-            try{
+            try {
                 emit(ApiResult.Loading(true))
 
                 user?.email?.let { email ->
@@ -114,33 +126,37 @@ class MovieRepository @Inject constructor(
                     emit(ApiResult.Success(true))
                 }
 
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 emit(ApiResult.Error(e.toString()))
             }
         }.flowOn(Dispatchers.IO)
     }
 
-    fun checkFavMovieInFirestore(firestore: FirebaseFirestore, user: FirebaseUser?, movie: Movie): Flow<ApiResult<Boolean>> {
-        return flow{
-           try{
-               emit(ApiResult.Loading(true))
+    fun checkFavMovieInFirestore(
+        firestore: FirebaseFirestore,
+        user: FirebaseUser?,
+        movie: Movie
+    ): Flow<ApiResult<Boolean>> {
+        return flow {
+            try {
+                emit(ApiResult.Loading(true))
 
-               user?.email?.let {
-                   val result = firestore.collection(it)
-                       .whereEqualTo("id", movie.id)
-                       .get()
-                       .await()
-                       .documents
+                user?.email?.let {
+                    val result = firestore.collection(it)
+                        .whereEqualTo("id", movie.id)
+                        .get()
+                        .await()
+                        .documents
 
-                   if(result.isNotEmpty()) {
-                       emit(ApiResult.Success(true))
-                   } else {
-                       emit(ApiResult.Success(false))
-                   }
-               }
-           }catch (e: Exception) {
-               emit(ApiResult.Error(e.toString()))
-           }
+                    if (result.isNotEmpty()) {
+                        emit(ApiResult.Success(true))
+                    } else {
+                        emit(ApiResult.Success(false))
+                    }
+                }
+            } catch (e: Exception) {
+                emit(ApiResult.Error(e.toString()))
+            }
         }.flowOn(Dispatchers.IO)
     }
 
@@ -151,32 +167,48 @@ class MovieRepository @Inject constructor(
                 val result = auth.signInWithEmailAndPassword(email, password)
                     .await()
                 emit(ApiResult.Success(result))
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 emit(ApiResult.Error(e.toString()))
             }
         }
     }
 
-    fun createNewUser(auth: FirebaseAuth, email: String, password: String): Flow<ApiResult<AuthResult>> {
+    fun createNewUser(
+        auth: FirebaseAuth,
+        email: String,
+        password: String
+    ): Flow<ApiResult<AuthResult>> {
         return flow {
             emit(ApiResult.Loading(true))
             try {
                 val result = auth.createUserWithEmailAndPassword(email, password)
                     .await()
                 emit(ApiResult.Success(result))
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 emit(ApiResult.Error(e.toString()))
             }
         }
     }
 
-    fun loadVideoList(movieId: Int) = flow{
-            val call = apiService.fetchTrailer(movieId, BuildConfig.TMDB_API_KEY)
+    fun loadVideoList(movieId: Int) = flow {
+        val call = apiService.fetchTrailer(movieId, BuildConfig.TMDB_API_KEY)
 
-            if(call.isSuccessful) {
-                call.body()?.let {
-                    emit(it.results)
-                }
+        if (call.isSuccessful) {
+            call.body()?.let {
+                emit(it.results)
             }
+        }
+    }
+
+    fun firebaseAuthWithGoogle(auth: FirebaseAuth, idToken: String) = flow {
+        emit(ApiResult.Loading(true))
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+
+        try{
+            val result = auth.signInWithCredential(credential).await()
+            emit(ApiResult.Success(result))
+        }catch (e: Exception) {
+            emit(ApiResult.Error(e.toString()))
+        }
     }
 }

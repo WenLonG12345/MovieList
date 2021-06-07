@@ -22,9 +22,11 @@ import com.example.movielist.utils.hide
 import com.example.movielist.utils.show
 import com.example.movielist.utils.showToast
 import com.example.movielist.viewmodel.MovieViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class DetailsMovieFragment: Fragment(R.layout.fragment_details_movie) {
 
     private lateinit var binding: FragmentDetailsMovieBinding

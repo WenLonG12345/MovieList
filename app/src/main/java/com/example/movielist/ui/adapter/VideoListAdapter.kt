@@ -21,7 +21,6 @@ class VideoListAdapter: ListAdapter<Video, VideoListAdapter.VideoVH>(VideoDiffUt
         fun bind(video: Video) {
             with(binding) {
                 ivVideoCover.load(getYoutubeThumbnailPath(video.key))
-                tvVideoName.text = video.name
 
                 cvVideo.setOnClickListener {
                     val playVideoIntent = Intent(Intent.ACTION_VIEW, Uri.parse(getYoutubeVideoPath(video.key)))

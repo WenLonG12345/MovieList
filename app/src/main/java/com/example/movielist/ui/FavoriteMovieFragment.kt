@@ -14,8 +14,9 @@ import com.example.movielist.model.Movie
 import com.example.movielist.ui.adapter.FavoriteMovieAdapter
 import com.example.movielist.utils.showToast
 import com.example.movielist.viewmodel.MovieViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class FavoriteMovieFragment: Fragment(R.layout.fragment_favorite_movie) {
 
     private lateinit var binding: FragmentFavoriteMovieBinding

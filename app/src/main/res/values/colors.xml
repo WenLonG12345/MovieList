@@ -12,4 +12,5 @@
     <color name="colorWhite2">#25959595</color>
     <color name="colorGrey2">#72454545</color>
     <color name="ocean_blue">#5b99ec</color>
+    <color name="color_light_grey">#eff1f2</color>
 </resources>

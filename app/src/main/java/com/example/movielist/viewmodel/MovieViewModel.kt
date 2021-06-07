@@ -24,7 +24,7 @@ class MovieViewModel @Inject constructor(
 ) : ViewModel() {
 
     var auth: FirebaseAuth = FirebaseAuth.getInstance()
-    var fireStore = FirebaseFirestore.getInstance()
+    private var fireStore = FirebaseFirestore.getInstance()
 
     val searchQuery = MutableStateFlow("")
     val sortOrder = MutableStateFlow(SortOrder.BY_UPCOMING)
@@ -172,4 +172,8 @@ class MovieViewModel @Inject constructor(
    fun onCreateNewUser(email: String, password: String): LiveData<ApiResult<AuthResult>> {
         return movieRepository.createNewUser(auth, email, password).asLiveData(viewModelScope.coroutineContext)
     }
+
+    fun onFirebaseAuthWithGoogle(idToken: String) =
+        movieRepository.firebaseAuthWithGoogle(auth, idToken).asLiveData()
+
 }

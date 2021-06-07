@@ -13,11 +13,16 @@ import com.example.movielist.utils.isEmailValid
 import com.example.movielist.utils.isPasswordValid
 import com.example.movielist.utils.showToast
 import com.example.movielist.viewmodel.MovieViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SignupFragment: Fragment(R.layout.fragment_sign_up) {
 
     private lateinit var binding: FragmentSignUpBinding
     private val movieViewModel by activityViewModels<MovieViewModel>()
+
+    @Inject lateinit var progressDialog: CustomProgressDialog
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentSignUpBinding.bind(view)
@@ -50,6 +55,7 @@ class SignupFragment: Fragment(R.layout.fragment_sign_up) {
 
     private fun signUpUser(email: String, password: String) {
         movieViewModel.onCreateNewUser(email, password).observe(viewLifecycleOwner, { result ->
+            progressDialog.isVisible(result.status == LOADING)
             when(result.status) {
                 SUCCESS -> {
                     "Successfully Registered".showToast(requireContext())
